@@ -1,0 +1,211 @@
+prompt,tier
+What is microservices plus NoSQL databases?,1
+"Compare in-house hosting and cloud hosting in a short paragraph, covering at least two differences.",2
+Find the phone number in this text: 'Contact Jane Doe at jane@example.com.',1
+Extract the total amount from: 'Call us at (555) 012-3456 for support.',1
+"Compare microservices and cloud hosting in a short paragraph, covering at least two differences.",2
+"Compare in-house hosting and NoSQL databases in a short paragraph, covering at least two differences.",2
+"Write a short creative story about an AI questioning its purpose, with a twist ending.",3
+Convert '2024-03-01' to MM/DD/YYYY.,1
+Explain the reasoning a senior engineer would use to choose between SQL databases and NoSQL databases under a hard budget cap.,3
+"Walk through, step by step, how you would debug a production incident where checkout latency spiked 10x during a flash sale.",3
+"Classify the sentiment of this review as positive, negative, or neutral: 'I can't log into my account and billing charged me twice this month.'",2
+"Given these constraints — must respond within 200ms, should degrade gracefully under load, no more than 3 external dependencies — design an approach and justify each decision.",3
+"First evaluate the pros and cons of SQL databases, then recommend NoSQL databases or an alternative, and justify your reasoning.",3
+List the key points from this article in bullet form: 'The order #48213 shipped on March 3rd for $129.99.',2
+Convert '2024-03-01' to two decimal places.,1
+Translate 'thank you very much' into Japanese.,1
+"Fix the spelling in this sentence: 'Revenue grew steadily through Q1 but dipped sharply in Q2 due to supply issues, then recovered by Q3.'",1
+"First evaluate the pros and cons of renting, then recommend buying or an alternative, and justify your reasoning.",3
+"Reformat this as a bulleted list: cat, dog, hamster, parrot",1
+List the key points from this article in bullet form: 'The meeting is schedule for tommorow at 3pm in Conferance Room B.',2
+"Given the following text, what is the date? 'This product is a complete waste of money, though the packaging was nice.'",1
+"Structure this information into a JSON object with fields title, author, year: 'Call us at (555) 012-3456 for support.'",2
+"Critique this argument and identify any logical flaws: 'This product is a complete waste of money, though the packaging was nice.'",3
+Convert '3.14159' to EUR.,1
+"Compare sync processing and buying in a short paragraph, covering at least two differences.",2
+"Given the following text, what is the total amount? 'The order #48213 shipped on March 3rd for $129.99.'",1
+Find the phone number in this text: 'I can't log into my account and billing charged me twice this month.',1
+Convert '100 USD' to EUR.,1
+"Group these items into categories: red, blue, green, yellow",2
+"Summarize the following in 2-3 sentences: 'Revenue grew steadily through Q1 but dipped sharply in Q2 due to supply issues, then recovered by Q3.'",2
+Critique this argument and identify any logical flaws: 'I can't log into my account and billing charged me twice this month.',3
+"Reformat this as a bulleted list: red, blue, green, yellow",1
+Translate 'good morning' into Spanish.,1
+Summarize the following in 2-3 sentences: 'The order #48213 shipped on March 3rd for $129.99.',2
+"Write a short creative story about a lighthouse keeper's last night, with a twist ending.",3
+"Compare renting and cloud hosting in a short paragraph, covering at least two differences.",2
+Critique this argument and identify any logical flaws: 'Call us at (555) 012-3456 for support.',3
+Extract the total amount from: 'I can't log into my account and billing charged me twice this month.',1
+"First evaluate the pros and cons of microservices, then recommend NoSQL databases or an alternative, and justify your reasoning.",3
+List the key points from this article in bullet form: 'Contact Jane Doe at jane@example.com.',2
+"Given the following text, what is the shipping address? 'This product is a complete waste of money, though the packaging was nice.'",1
+"Walk through, step by step, how you would debug a production incident where one region silently dropped 5% of writes.",3
+"Given ambiguous requirements around a robot learning to paint, what clarifying questions would you ask, and how would that change your approach?",3
+What is REST plus GraphQL?,1
+"Critique this argument and identify any logical flaws: 'Revenue grew steadily through Q1 but dipped sharply in Q2 due to supply issues, then recovered by Q3.'",3
+Extract the order ID from: 'The meeting is schedule for tommorow at 3pm in Conferance Room B.',1
+"First evaluate the pros and cons of microservices, then recommend a monolith or an alternative, and justify your reasoning.",3
+"Reformat this as a bulleted list: apples, bananas, cherries",1
+"Given the following table, summarize the top 3 rows: Q1: $2M, Q2: $1.8M, Q3: $2.4M",2
+"Structure this information into a JSON object with fields title, author, year: 'This product is a complete waste of money, though the packaging was nice.'",2
+"Structure this information into a JSON object with fields title, author, year: 'I can't log into my account and billing charged me twice this month.'",2
+Explain the reasoning a senior engineer would use to choose between sync processing and async processing under sub-100ms latency.,3
+"Structure this information into a JSON object with fields name, email, order_id: 'The meeting is schedule for tommorow at 3pm in Conferance Room B.'",2
+"Rewrite this paragraph to be more formal, keeping the meaning intact: 'I can't log into my account and billing charged me twice this month.'",2
+Summarize the following in 2-3 sentences: 'Contact Jane Doe at jane@example.com.',2
+"Explain the reasoning a senior engineer would use to choose between SQL databases and async processing under 10,000 requests/sec.",3
+"Structure this information into a JSON object with fields title, author, year: 'The meeting is schedule for tommorow at 3pm in Conferance Room B.'",2
+What is the capital of Kenya?,1
+"Rewrite this paragraph to be more formal, keeping the meaning intact: 'Contact Jane Doe at jane@example.com.'",2
+Extract the name and email from: 'I can't log into my account and billing charged me twice this month.',1
+Analyze the trade-offs between renting and NoSQL databases for a system that must handle a hard budget cap.,3
+"Explain the reasoning a senior engineer would use to choose between sync processing and a monolith under 10,000 requests/sec.",3
+"Rewrite this paragraph to be more formal, keeping the meaning intact: 'The order #48213 shipped on March 3rd for $129.99.'",2
+"Classify the sentiment of this review as positive, negative, or neutral: 'Revenue grew steadily through Q1 but dipped sharply in Q2 due to supply issues, then recovered by Q3.'",2
+"Categorize this support ticket into billing, technical, or account: 'The meeting is schedule for tommorow at 3pm in Conferance Room B.'",2
+What is in-house hosting plus buying?,1
+"Extract the order ID from: 'Revenue grew steadily through Q1 but dipped sharply in Q2 due to supply issues, then recovered by Q3.'",1
+"Given the following text, what is the date? 'The order #48213 shipped on March 3rd for $129.99.'",1
+Find the phone number in this text: 'The order #48213 shipped on March 3rd for $129.99.',1
+What is the capital of Canada?,1
+"Given these constraints — must stay under $500/month, should degrade gracefully under load, no more than 3 external dependencies — design an approach and justify each decision.",3
+What is renting plus buying?,1
+Convert '2024-03-01' to EUR.,1
+What is SQL databases plus GraphQL?,1
+Analyze the trade-offs between SQL databases and buying for a system that must handle a hard budget cap.,3
+"Compare SQL databases and GraphQL in a short paragraph, covering at least two differences.",2
+What is the capital of Japan?,1
+"Structure this information into a JSON object with fields name, email, order_id: 'Revenue grew steadily through Q1 but dipped sharply in Q2 due to supply issues, then recovered by Q3.'",2
+"Structure this information into a JSON object with fields title, author, year: 'Contact Jane Doe at jane@example.com.'",2
+"Rewrite this paragraph to be more formal, keeping the meaning intact: 'This product is a complete waste of money, though the packaging was nice.'",2
+"Given the following text, what is the name and email? 'Call us at (555) 012-3456 for support.'",1
+"Analyze the trade-offs between SQL databases and a monolith for a system that must handle 10,000 requests/sec.",3
+"Design a solution for checkout latency spiked 10x during a flash sale that balances cost, latency, and reliability. Explain your reasoning at each step.",3
+"Structure this information into a JSON object with fields name, email, order_id: 'I can't log into my account and billing charged me twice this month.'",2
+"Find the phone number in this text: 'This product is a complete waste of money, though the packaging was nice.'",1
+"Classify the sentiment of this review as positive, negative, or neutral: 'This product is a complete waste of money, though the packaging was nice.'",2
+"Design a solution for a memory leak caused nightly restarts that balances cost, latency, and reliability. Explain your reasoning at each step.",3
+"First evaluate the pros and cons of in-house hosting, then recommend buying or an alternative, and justify your reasoning.",3
+"Write a short creative story about a robot learning to paint, with a twist ending.",3
+"Given this data, identify the trend: Jan: 100, Feb: 120, Mar: 90, Apr: 150",2
+"Write a nuanced product decision memo about whether to in-house hosting or a monolith, weighing at least three factors.",3
+Summarize the following in 2-3 sentences: 'Call us at (555) 012-3456 for support.',2
+"Classify the sentiment of this review as positive, negative, or neutral: 'The meeting is schedule for tommorow at 3pm in Conferance Room B.'",2
+"First evaluate the pros and cons of sync processing, then recommend GraphQL or an alternative, and justify your reasoning.",3
+What is SQL databases plus cloud hosting?,1
+Summarize the following in 2-3 sentences: 'I can't log into my account and billing charged me twice this month.',2
+What year did the fall of the Berlin Wall happen?,1
+"First evaluate the pros and cons of SQL databases, then recommend a monolith or an alternative, and justify your reasoning.",3
+"Given the following text, what is the name and email? 'Revenue grew steadily through Q1 but dipped sharply in Q2 due to supply issues, then recovered by Q3.'",1
+Fix the spelling in this sentence: 'The order #48213 shipped on March 3rd for $129.99.',1
+"Given the following text, what is the total amount? 'The meeting is schedule for tommorow at 3pm in Conferance Room B.'",1
+List the key points from this article in bullet form: 'Call us at (555) 012-3456 for support.',2
+What is sync processing plus NoSQL databases?,1
+"Categorize this support ticket into billing, technical, or account: 'Call us at (555) 012-3456 for support.'",2
+"Given the following text, what is the order ID? 'Contact Jane Doe at jane@example.com.'",1
+"Compare REST and async processing in a short paragraph, covering at least two differences.",2
+"Given ambiguous requirements around a lighthouse keeper's last night, what clarifying questions would you ask, and how would that change your approach?",3
+"Given these constraints — must stay under $500/month, should be horizontally scalable, no more than $50 in monthly infra cost — design an approach and justify each decision.",3
+"Given the following text, what is the name and email? 'I can't log into my account and billing charged me twice this month.'",1
+Analyze the trade-offs between REST and cloud hosting for a system that must handle a hard budget cap.,3
+Explain the reasoning a senior engineer would use to choose between microservices and NoSQL databases under a hard budget cap.,3
+Analyze the trade-offs between sync processing and buying for a system that must handle sub-100ms latency.,3
+Explain the reasoning a senior engineer would use to choose between renting and cloud hosting under sub-100ms latency.,3
+What is sync processing plus buying?,1
+"Compare REST and NoSQL databases in a short paragraph, covering at least two differences.",2
+Fix the spelling in this sentence: 'I can't log into my account and billing charged me twice this month.',1
+"Compare SQL databases and cloud hosting in a short paragraph, covering at least two differences.",2
+"Analyze the trade-offs between sync processing and cloud hosting for a system that must handle 10,000 requests/sec.",3
+"Group these items into categories: cat, dog, hamster, parrot",2
+Find the phone number in this text: 'Call us at (555) 012-3456 for support.',1
+"Categorize this support ticket into billing, technical, or account: 'I can't log into my account and billing charged me twice this month.'",2
+"Compare renting and a monolith in a short paragraph, covering at least two differences.",2
+"List the key points from this article in bullet form: 'Revenue grew steadily through Q1 but dipped sharply in Q2 due to supply issues, then recovered by Q3.'",2
+"Write a nuanced product decision memo about whether to sync processing or buying, weighing at least three factors.",3
+Critique this argument and identify any logical flaws: 'Contact Jane Doe at jane@example.com.',3
+"Compare sync processing and NoSQL databases in a short paragraph, covering at least two differences.",2
+"List the key points from this article in bullet form: 'This product is a complete waste of money, though the packaging was nice.'",2
+"Compare REST and buying in a short paragraph, covering at least two differences.",2
+"First evaluate the pros and cons of in-house hosting, then recommend GraphQL or an alternative, and justify your reasoning.",3
+"Given the following table, summarize the top 3 rows: Jan: 100, Feb: 120, Mar: 90, Apr: 150",2
+Analyze the trade-offs between renting and cloud hosting for a system that must handle a hard budget cap.,3
+Extract the shipping address from: 'I can't log into my account and billing charged me twice this month.',1
+"Fix the spelling in this sentence: 'This product is a complete waste of money, though the packaging was nice.'",1
+"Categorize this support ticket into billing, technical, or account: 'The order #48213 shipped on March 3rd for $129.99.'",2
+Analyze the trade-offs between in-house hosting and a monolith for a system that must handle strict uptime SLAs.,3
+"Compare in-house hosting and async processing in a short paragraph, covering at least two differences.",2
+"Rewrite this paragraph to be more formal, keeping the meaning intact: 'Call us at (555) 012-3456 for support.'",2
+What is renting plus GraphQL?,1
+What is sync processing plus cloud hosting?,1
+Analyze the trade-offs between microservices and buying for a system that must handle strict uptime SLAs.,3
+"Compare sync processing and async processing in a short paragraph, covering at least two differences.",2
+Explain the reasoning a senior engineer would use to choose between microservices and GraphQL under strict uptime SLAs.,3
+Analyze the trade-offs between microservices and GraphQL for a system that must handle sub-100ms latency.,3
+"Compare microservices and GraphQL in a short paragraph, covering at least two differences.",2
+What year did the moon landing happen?,1
+Convert '100 USD' to two decimal places.,1
+"Compare in-house hosting and GraphQL in a short paragraph, covering at least two differences.",2
+"Rewrite this paragraph to be more formal, keeping the meaning intact: 'The meeting is schedule for tommorow at 3pm in Conferance Room B.'",2
+"Walk through, step by step, how you would debug a production incident where a memory leak caused nightly restarts.",3
+What year did the first iPhone launch happen?,1
+Analyze the trade-offs between SQL databases and async processing for a system that must handle strict uptime SLAs.,3
+Extract the order ID from: 'I can't log into my account and billing charged me twice this month.',1
+Analyze the trade-offs between in-house hosting and a monolith for a system that must handle sub-100ms latency.,3
+"First evaluate the pros and cons of sync processing, then recommend buying or an alternative, and justify your reasoning.",3
+What is the capital of Brazil?,1
+Translate 'where is the train station' into German.,1
+"First evaluate the pros and cons of SQL databases, then recommend buying or an alternative, and justify your reasoning.",3
+"Summarize the following in 2-3 sentences: 'This product is a complete waste of money, though the packaging was nice.'",2
+"Design a solution for one region silently dropped 5% of writes that balances cost, latency, and reliability. Explain your reasoning at each step.",3
+"Given ambiguous requirements around an AI questioning its purpose, what clarifying questions would you ask, and how would that change your approach?",3
+"Given these constraints — must stay under $500/month, should be horizontally scalable, no more than 3 external dependencies — design an approach and justify each decision.",3
+"First evaluate the pros and cons of renting, then recommend GraphQL or an alternative, and justify your reasoning.",3
+"Find the phone number in this text: 'Revenue grew steadily through Q1 but dipped sharply in Q2 due to supply issues, then recovered by Q3.'",1
+"Structure this information into a JSON object with fields name, email, order_id: 'Call us at (555) 012-3456 for support.'",2
+What is renting plus cloud hosting?,1
+"Classify the sentiment of this review as positive, negative, or neutral: 'Call us at (555) 012-3456 for support.'",2
+Translate 'where is the train station' into French.,1
+Explain the reasoning a senior engineer would use to choose between sync processing and cloud hosting under a hard budget cap.,3
+"Categorize this support ticket into billing, technical, or account: 'This product is a complete waste of money, though the packaging was nice.'",2
+"Classify the sentiment of this review as positive, negative, or neutral: 'The order #48213 shipped on March 3rd for $129.99.'",2
+Translate 'thank you very much' into French.,1
+Analyze the trade-offs between microservices and GraphQL for a system that must handle strict uptime SLAs.,3
+"Group these items into categories: apples, bananas, cherries",2
+Fix the spelling in this sentence: 'Contact Jane Doe at jane@example.com.',1
+"First evaluate the pros and cons of sync processing, then recommend a monolith or an alternative, and justify your reasoning.",3
+"Write a nuanced product decision memo about whether to REST or a monolith, weighing at least three factors.",3
+"Rewrite this paragraph to be more formal, keeping the meaning intact: 'Revenue grew steadily through Q1 but dipped sharply in Q2 due to supply issues, then recovered by Q3.'",2
+Critique this argument and identify any logical flaws: 'The meeting is schedule for tommorow at 3pm in Conferance Room B.',3
+"Analyze the trade-offs between microservices and NoSQL databases for a system that must handle 10,000 requests/sec.",3
+Fix the spelling in this sentence: 'Call us at (555) 012-3456 for support.',1
+"Compare in-house hosting and buying in a short paragraph, covering at least two differences.",2
+"Categorize this support ticket into billing, technical, or account: 'Contact Jane Doe at jane@example.com.'",2
+"Given these constraints — must respond within 200ms, should be horizontally scalable, no more than 3 external dependencies — design an approach and justify each decision.",3
+"Given this data, identify the trend: Q1: $2M, Q2: $1.8M, Q3: $2.4M",2
+Explain the reasoning a senior engineer would use to choose between REST and cloud hosting under sub-100ms latency.,3
+"Extract the total amount from: 'This product is a complete waste of money, though the packaging was nice.'",1
+Analyze the trade-offs between sync processing and NoSQL databases for a system that must handle strict uptime SLAs.,3
+Analyze the trade-offs between sync processing and NoSQL databases for a system that must handle sub-100ms latency.,3
+Convert '3.14159' to two decimal places.,1
+"Write a nuanced product decision memo about whether to renting or buying, weighing at least three factors.",3
+What is SQL databases plus async processing?,1
+"Classify the sentiment of this review as positive, negative, or neutral: 'Contact Jane Doe at jane@example.com.'",2
+Critique this argument and identify any logical flaws: 'The order #48213 shipped on March 3rd for $129.99.',3
+What is REST plus a monolith?,1
+"Given these constraints — must support 1000 concurrent users, should degrade gracefully under load, no more than 3 external dependencies — design an approach and justify each decision.",3
+"Write a nuanced product decision memo about whether to REST or GraphQL, weighing at least three factors.",3
+List the key points from this article in bullet form: 'I can't log into my account and billing charged me twice this month.',2
+What is the capital of France?,1
+"Structure this information into a JSON object with fields title, author, year: 'The order #48213 shipped on March 3rd for $129.99.'",2
+Extract the shipping address from: 'The order #48213 shipped on March 3rd for $129.99.',1
+"Structure this information into a JSON object with fields name, email, order_id: 'The order #48213 shipped on March 3rd for $129.99.'",2
+"Given these constraints — must stay under $500/month, should log every failure, no more than 2 seconds of added latency — design an approach and justify each decision.",3
+Summarize the following in 2-3 sentences: 'The meeting is schedule for tommorow at 3pm in Conferance Room B.',2
+Analyze the trade-offs between microservices and cloud hosting for a system that must handle sub-100ms latency.,3
+Translate 'good morning' into French.,1
+Extract the order ID from: 'Contact Jane Doe at jane@example.com.',1
+Fix the spelling in this sentence: 'The meeting is schedule for tommorow at 3pm in Conferance Room B.',1
+"Categorize this support ticket into billing, technical, or account: 'Revenue grew steadily through Q1 but dipped sharply in Q2 due to supply issues, then recovered by Q3.'",2
+"Write a nuanced product decision memo about whether to microservices or buying, weighing at least three factors.",3
+"Given the following text, what is the date? 'Revenue grew steadily through Q1 but dipped sharply in Q2 due to supply issues, then recovered by Q3.'",1

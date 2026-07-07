@@ -1,0 +1,13 @@
+# Tier -> model registry key (see app/models/registry.py MODEL_REGISTRY).
+# Editable at runtime via PUT /v1/routing-config — no redeploy needed.
+tier_to_model:
+  1: llama-local
+  2: gpt-4o-mini
+  3: gpt-4o
+
+# If the classifier's confidence is below this, escalate one tier before
+# even sending the first request (belt-and-suspenders against a bad call).
+min_confidence: 0.55
+
+# Judge model used by the async verifier (Phase 3) and for escalations.
+judge_model: gpt-4o
