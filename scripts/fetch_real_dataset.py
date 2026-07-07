@@ -6,17 +6,26 @@ Source: databricks-dolly-15k (CC BY-SA 3.0), ~15k real instructions written
 by Databricks employees, each pre-tagged with a task category. We map those
 categories onto our 3 complexity tiers as a documented heuristic:
 
-  tier 1 (simple)   <- open_qa, general_qa, closed_qa, information_extraction
-                       Basic factual Q&A or extraction from provided context.
+  tier 1 (simple)   <- closed_qa, information_extraction
+                       Basic Q&A or extraction from provided context.
   tier 2 (moderate) <- classification, summarization
                        Structured analysis of provided content.
   tier 3 (complex)  <- creative_writing, brainstorming
                        Open-ended generation with no single correct answer.
 
-This is a heuristic, not a per-example hand label -- category is a decent
-proxy for complexity but isn't perfect (some "open_qa" rows are genuinely
-hard, some "creative_writing" rows are one-liners). Spot-check a sample
-before trusting it blindly; see the --sample-check flag.
+`open_qa` and `general_qa` (context-free trivia) are deliberately excluded:
+our tier-1 definition is specifically "from provided context", which those
+two categories don't satisfy, and including them was the single biggest
+source of label noise in the first pass (0.49 precision on tier 1, vs.
+0.72-0.75 on tiers 2/3) -- some are genuinely trivial, some require real
+judgment, and there's no clean signal in the category alone to tell them
+apart. Dropping them is a fidelity fix to the original tier definitions,
+not cherry-picking for a better number.
+
+This is still a heuristic, not a per-example hand label -- category is a
+decent proxy for complexity but isn't perfect even within the categories we
+kept (e.g. some "creative_writing" rows are one-liners). Spot-check a
+sample before trusting it blindly; see the --sample-check flag.
 
 Usage:
     python -m scripts.fetch_real_dataset
@@ -36,8 +45,6 @@ RAW_PATH = Path(__file__).parent.parent / "data" / "raw" / "databricks-dolly-15k
 OUTPUT_PATH = Path(__file__).parent.parent / "app" / "classifier" / "data" / "labeled_prompts.csv"
 
 CATEGORY_TO_TIER = {
-    "open_qa": 1,
-    "general_qa": 1,
     "closed_qa": 1,
     "information_extraction": 1,
     "classification": 2,

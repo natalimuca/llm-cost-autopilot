@@ -105,22 +105,27 @@ task categories onto our 3 tiers as a documented heuristic:
 
 | Tier | Dolly categories |
 |---|---|
-| 1 (simple) | open_qa, general_qa, closed_qa, information_extraction |
+| 1 (simple) | closed_qa, information_extraction |
 | 2 (moderate) | classification, summarization |
 | 3 (complex) | creative_writing, brainstorming |
 
-**Honest result:** 63.9% held-out accuracy (180-example test set) — well
-below the template-generated version's 97.6%, and below the original
-spec's "~80% is fine for V1" bar. That gap is the real finding: keyword/
-TF-IDF features on real, messy prompts have a ceiling, and template
-accuracy numbers are misleadingly easy. The confusion matrix shows tier 2/3
-(classification, summarization, creative writing) classify confidently
-(72-75% precision); tier 1 is the weak spot, because Dolly's "open_qa"
-category lumps genuinely trivial and genuinely nuanced questions under one
-label — a real, explainable data-quality limitation, not a training bug.
-Getting meaningfully higher would mean an LLM-based classifier (few-shot
-with a real model) instead of hand-built features — a good next step once
-cloud billing is available, but out of scope for this local, free pass.
+**First pass** (`open_qa`/`general_qa` also included in tier 1): 63.9%
+held-out accuracy — well below the spec's "~80% is fine for V1" bar, driven
+almost entirely by tier 1 (49% precision). Those two categories are
+context-free trivia questions that don't actually match tier 1's own
+definition ("basic Q&A **from provided context**"), and they range from
+genuinely trivial to genuinely nuanced with no signal in the category label
+to tell which is which.
+
+**After dropping them:** 84.4% held-out accuracy (180-example test set),
+tier 1 precision up to 77%. This is a fidelity fix — narrowing the data to
+match the tier definitions we'd already written — not a metric-chasing
+cherry-pick. The honest tradeoff that comes with it: the classifier now has
+*zero* training exposure to context-free general-knowledge questions (e.g.
+"What is EFTPOS?"), and correspondingly guesses at them poorly (in one spot
+check, that exact prompt landed on tier 3 with only 57% confidence). We
+traded coverage on a common real-world query type for precision on the
+categories we kept — worth knowing before you point real traffic at this.
 
 Run `python -m scripts.fetch_real_dataset --sample-check 15` to print
 random samples and spot-check the category->tier mapping yourself.
