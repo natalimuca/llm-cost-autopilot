@@ -77,21 +77,53 @@ stay in scope. See `app/verifier/worker.py` for the reasoning.
 ```
 app/
   models/       Phase 1 — ModelConfig registry, provider adapters, send_request()
-  classifier/   Phase 2 — feature extraction, labeled dataset, sklearn training
-  router/       Phase 2 — tier -> model mapping (config/routing.yaml)
+  classifier/   Phase 2 — labeled dataset, TF-IDF + logistic regression training
+  router/       Phase 2 — tier -> model mapping (config/routing.yaml), latency-aware reassignment
   verifier/     Phase 3 — LLM-as-judge scoring, async worker, auto-escalation
   db/           Phase 4 — SQLite schema + logging/query helpers
   dashboard/    Phase 4 — Streamlit cost/quality dashboard
   api/          Phase 5 — FastAPI routes + request/response schemas
+  logging_config.py  structured JSON request logs (alongside SQLite)
   main.py       Phase 5 — FastAPI app, lifespan (DB init + worker startup)
 scripts/
-  generate_dataset.py       seed labeled dataset generator (Phase 2)
+  fetch_real_dataset.py     primary labeled dataset: real prompts from Dolly-15k (see below)
+  generate_dataset.py       template-generated fallback/bootstrap dataset (Phase 2)
   test_providers.py         Phase 1 baseline: same prompts across every model
   retrain_from_feedback.py  Phase 3.4 flywheel: failures -> retrain
   load_test.py              Phase 6 load test against a running API
 config/routing.yaml         tier -> model map, editable via PUT /v1/routing-config
-tests/                       pytest unit tests
+tests/                       pytest unit tests (testpaths scoped via pytest.ini so
+                              `pytest` never tries to collect scripts/*.py)
 ```
+
+## The classifier's training data — real, not synthetic
+
+`app/classifier/data/labeled_prompts.csv` is 900 real, human-written prompts
+sampled from [databricks-dolly-15k](https://huggingface.co/datasets/databricks/databricks-dolly-15k)
+(CC BY-SA 3.0), not templates. `scripts/fetch_real_dataset.py` maps Dolly's
+task categories onto our 3 tiers as a documented heuristic:
+
+| Tier | Dolly categories |
+|---|---|
+| 1 (simple) | open_qa, general_qa, closed_qa, information_extraction |
+| 2 (moderate) | classification, summarization |
+| 3 (complex) | creative_writing, brainstorming |
+
+**Honest result:** 63.9% held-out accuracy (180-example test set) — well
+below the template-generated version's 97.6%, and below the original
+spec's "~80% is fine for V1" bar. That gap is the real finding: keyword/
+TF-IDF features on real, messy prompts have a ceiling, and template
+accuracy numbers are misleadingly easy. The confusion matrix shows tier 2/3
+(classification, summarization, creative writing) classify confidently
+(72-75% precision); tier 1 is the weak spot, because Dolly's "open_qa"
+category lumps genuinely trivial and genuinely nuanced questions under one
+label — a real, explainable data-quality limitation, not a training bug.
+Getting meaningfully higher would mean an LLM-based classifier (few-shot
+with a real model) instead of hand-built features — a good next step once
+cloud billing is available, but out of scope for this local, free pass.
+
+Run `python -m scripts.fetch_real_dataset --sample-check 15` to print
+random samples and spot-check the category->tier mapping yourself.
 
 ## Setup
 
@@ -112,19 +144,20 @@ in `app/models/registry.py` for whatever you have.
 python -m scripts.test_providers
 ```
 
-### 2. Generate the seed dataset and train the classifier (Phase 2)
+### 2. Fetch the real dataset and train the classifier (Phase 2)
 
 ```bash
-python -m scripts.generate_dataset
+python -m scripts.fetch_real_dataset
 python -m app.classifier.train
 ```
 
-The shipped dataset is template-generated (210 examples, ~98% held-out
-accuracy) — that accuracy is inflated by how clean templates are, not a
-claim about real-world traffic. Replace/augment
-`app/classifier/data/labeled_prompts.csv` with real hand-labeled prompts as
-you get them; the Phase 3 feedback loop does this automatically for
-verifier-caught failures.
+This downloads real, human-written prompts (see "The classifier's training
+data" above) and trains on them — no API keys needed. If you'd rather
+bootstrap quickly with the older template-generated set instead (faster,
+but inflated accuracy that doesn't reflect real traffic), use
+`python -m scripts.generate_dataset` instead. Either way, the Phase 3
+feedback loop appends real verifier-caught routing failures to whichever
+dataset you're using.
 
 ### 3. Run the API + dashboard
 

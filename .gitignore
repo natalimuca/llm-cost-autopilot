@@ -12,5 +12,6 @@ build/
 .DS_Store
 data/*.db
 data/*.sqlite3
+data/raw/
 models/*.joblib
 app/classifier/*.joblib
