@@ -6,9 +6,11 @@ from fastapi import FastAPI
 
 from app.api.routes import router as api_router
 from app.db.database import init_db
+from app.logging_config import configure_logging
 from app.verifier.worker import run_worker
 
 load_dotenv()
+configure_logging()
 
 
 @asynccontextmanager

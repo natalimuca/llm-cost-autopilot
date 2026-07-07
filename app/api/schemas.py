@@ -8,6 +8,11 @@ class ChatMessage(BaseModel):
 
 class CompletionRequest(BaseModel):
     messages: list[ChatMessage] = Field(..., min_length=1)
+    max_latency_seconds: float | None = Field(
+        default=None,
+        description="If set and the tier's assigned model's avg latency exceeds this, "
+        "route to the fastest model that still meets the required quality tier.",
+    )
 
 
 class CompletionResponse(BaseModel):
@@ -21,6 +26,7 @@ class CompletionResponse(BaseModel):
     cost_usd: float
     latency_seconds: float
     request_id: int
+    reassigned_for_latency: bool
 
 
 class RoutingConfigUpdate(BaseModel):

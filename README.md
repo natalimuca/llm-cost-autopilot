@@ -161,10 +161,19 @@ the artifacts for the writeup.
 
 | Endpoint | Method | Purpose |
 |---|---|---|
-| `/v1/completions` | POST | Routed chat completion. Caller doesn't choose the model. |
+| `/v1/completions` | POST | Routed chat completion. Caller doesn't choose the model. Optional `max_latency_seconds` — if the tier's assigned model is too slow, reassigns to the fastest model that still meets the required quality tier. |
 | `/v1/models` | GET | Registry of available models and their pricing. |
 | `/v1/stats` | GET | Cost savings summary (the headline number). |
 | `/v1/routing-config` | GET/PUT | Read or update the tier -> model map without redeploying. |
+
+## Observability
+
+Every request produces two things: a row in SQLite (queried by the
+dashboard and `/v1/stats`) and a structured JSON log line on stdout (for
+Grafana/Loki/CloudWatch-style aggregation) — see `app/logging_config.py`.
+
+CI (`.github/workflows/ci.yml`) generates the seed dataset, trains the
+classifier, and runs `pytest` on every push/PR to `main`.
 
 ## The feedback loop
 

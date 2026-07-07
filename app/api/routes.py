@@ -4,6 +4,7 @@ from fastapi import APIRouter, HTTPException
 
 from app.api.schemas import ChatMessage, CompletionRequest, CompletionResponse, RoutingConfigUpdate
 from app.db.database import get_stats, log_request
+from app.logging_config import log_request_event
 from app.models.interface import send_request
 from app.models.registry import MODEL_REGISTRY, get_model
 from app.router.router import load_routing_config, route, update_routing_config
@@ -23,7 +24,7 @@ def _last_user_prompt(messages: list[ChatMessage]) -> str:
 async def create_completion(payload: CompletionRequest) -> CompletionResponse:
     prompt = _last_user_prompt(payload.messages)
 
-    decision = route(prompt)
+    decision = route(prompt, max_latency_seconds=payload.max_latency_seconds)
     response = await send_request(prompt, decision.model_config)
 
     request_id = log_request(
@@ -37,6 +38,21 @@ async def create_completion(payload: CompletionRequest) -> CompletionResponse:
         output_tokens=response.output_tokens,
         cost_usd=response.cost_usd,
         latency_seconds=response.latency_seconds,
+    )
+
+    log_request_event(
+        request_id=request_id,
+        prompt_hash=hashlib.sha256(prompt.encode()).hexdigest(),
+        complexity_tier=decision.prompt_tier,
+        confidence=decision.confidence,
+        routed_model=decision.model_name,
+        provider=response.provider,
+        input_tokens=response.input_tokens,
+        output_tokens=response.output_tokens,
+        cost_usd=response.cost_usd,
+        latency_seconds=response.latency_seconds,
+        escalated_pre_send=decision.escalated_pre_send,
+        reassigned_for_latency=decision.reassigned_for_latency,
     )
 
     enqueue(VerificationJob(
@@ -57,6 +73,7 @@ async def create_completion(payload: CompletionRequest) -> CompletionResponse:
         cost_usd=response.cost_usd,
         latency_seconds=response.latency_seconds,
         request_id=request_id,
+        reassigned_for_latency=decision.reassigned_for_latency,
     )
 
 
