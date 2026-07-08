@@ -1,9 +1,11 @@
 import os
 import time
 
+import anthropic
 from anthropic import AsyncAnthropic
 
 from app.models.providers.base import BaseProvider
+from app.models.providers.retry import with_retry
 from app.models.registry import ModelConfig
 from app.models.response import Response
 
@@ -14,6 +16,7 @@ class AnthropicProvider(BaseProvider):
     def __init__(self, api_key: str | None = None):
         self._client = AsyncAnthropic(api_key=api_key or os.environ.get("ANTHROPIC_API_KEY"))
 
+    @with_retry(anthropic.RateLimitError, anthropic.APIConnectionError, anthropic.APITimeoutError, anthropic.InternalServerError)
     async def send(self, prompt: str, config: ModelConfig) -> Response:
         start = time.perf_counter()
         message = await self._client.messages.create(

@@ -149,7 +149,7 @@ stay in scope. See `app/verifier/worker.py` for the reasoning.
 
 ```
 app/
-  models/       Phase 1 — ModelConfig registry, provider adapters, send_request()
+  models/       Phase 1 — ModelConfig registry, provider adapters (with retry/backoff), send_request()
   classifier/   Phase 2 — llm_classifier.py (default) + classifier.py/train.py (TF-IDF fallback)
   router/       Phase 2 — tier -> model mapping (config/routing.yaml), latency-aware reassignment
   verifier/     Phase 3 — LLM-as-judge scoring, async worker, auto-escalation
@@ -398,6 +398,15 @@ Environment variables (`.env`, see `.env.example`):
 ```bash
 pytest
 ```
+
+20 tests, all mocked/pure-function — no API keys or billing required:
+
+| File | Covers |
+|---|---|
+| `test_registry.py` | `ModelConfig` cost math, registry lookups |
+| `test_retry.py` | Retry/backoff recovers from transient errors, gives up and reraises after max attempts, doesn't swallow unrelated exceptions |
+| `test_router.py` | Escalation on low classifier confidence, tier-3 escalation ceiling, latency-aware reassignment (and the case where no faster option meets budget) |
+| `test_verifier.py` | Score parsing, quality-threshold logic, and the verifier worker's escalation/correct-tier decisions with a mocked judge call |
 
 `pytest.ini` scopes discovery to `tests/` so `pytest` never tries to import
 `scripts/test_providers.py` or `scripts/load_test.py` as test modules (their

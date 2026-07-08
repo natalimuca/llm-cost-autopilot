@@ -1,9 +1,11 @@
 import os
 import time
 
+import openai
 from openai import AsyncOpenAI
 
 from app.models.providers.base import BaseProvider
+from app.models.providers.retry import with_retry
 from app.models.registry import ModelConfig
 from app.models.response import Response
 
@@ -12,6 +14,7 @@ class OpenAIProvider(BaseProvider):
     def __init__(self, api_key: str | None = None):
         self._client = AsyncOpenAI(api_key=api_key or os.environ.get("OPENAI_API_KEY"))
 
+    @with_retry(openai.RateLimitError, openai.APIConnectionError, openai.APITimeoutError, openai.InternalServerError)
     async def send(self, prompt: str, config: ModelConfig) -> Response:
         start = time.perf_counter()
         completion = await self._client.chat.completions.create(

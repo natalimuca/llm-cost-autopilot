@@ -4,6 +4,7 @@ import time
 import httpx
 
 from app.models.providers.base import BaseProvider
+from app.models.providers.retry import with_retry
 from app.models.registry import ModelConfig
 from app.models.response import Response
 
@@ -14,6 +15,7 @@ class OllamaProvider(BaseProvider):
     def __init__(self, host: str | None = None):
         self._host = host or os.environ.get("OLLAMA_HOST", "http://localhost:11434")
 
+    @with_retry(httpx.ConnectError, httpx.TimeoutException)
     async def send(self, prompt: str, config: ModelConfig) -> Response:
         start = time.perf_counter()
         async with httpx.AsyncClient(timeout=120.0) as client:
