@@ -155,6 +155,11 @@ backend aren't regressions — they're the system routing far more
 aggressively to a genuinely weaker free/cheap model (local Llama went from
 5% to 54% of traffic), which naturally gets more prompts wrong, and the
 verifier safety net catching and auto-correcting those in the background.
+
+These numbers were measured with tier 3 → gpt-4o. `config/routing.yaml`
+now maps tier 3 → **claude-sonnet** instead, so the live system is a real
+three-provider mix (free local Llama, OpenAI mid-tier, Anthropic top-tier)
+rather than OpenAI-only with Anthropic registered but unused.
 That's the entire point of the escalation loop working as designed, not a
 side effect to explain away.
 

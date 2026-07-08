@@ -9,7 +9,7 @@ classifier_backend: llm
 tier_to_model:
   1: llama-local
   2: gpt-4o-mini
-  3: gpt-4o
+  3: claude-sonnet
 
 # If the classifier's confidence is below this, escalate one tier before
 # even sending the first request (belt-and-suspenders against a bad call).
