@@ -11,6 +11,14 @@ wasn't.
 > number that goes at the top of the portfolio writeup — this README
 > doesn't hardcode one because it depends on your prompt mix.
 
+## Project showcase site
+
+`docs/index.html` is a self-contained, single-file case-study page (fonts
+embedded, no build step) with the real numbers from the run documented
+below and the honest classifier-accuracy experiment log. Open it directly
+in a browser, or enable **Settings → Pages → branch `main`, folder `/docs`**
+on the GitHub repo to host it for free.
+
 ## Architecture
 
 ```
