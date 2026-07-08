@@ -457,4 +457,4 @@ Documented honestly rather than glossed over:
 
 ## License
 
-[MIT](LICENSE) — do whatever you want with it.
+[MIT](LICENSE)
