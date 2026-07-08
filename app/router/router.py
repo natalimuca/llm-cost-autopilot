@@ -5,7 +5,8 @@ from threading import Lock
 
 import yaml
 
-from app.classifier.classifier import classify
+from app.classifier import classifier as tfidf_classifier
+from app.classifier import llm_classifier
 from app.models.registry import MODEL_REGISTRY, ModelConfig, QualityTier, get_model
 
 CONFIG_PATH = Path(__file__).parent.parent.parent / "config" / "routing.yaml"
@@ -62,9 +63,13 @@ def _fastest_meeting_quality(min_quality: QualityTier, max_latency: float) -> tu
     return min(candidates, key=lambda pair: pair[1].avg_latency_seconds)
 
 
-def route(prompt: str, max_latency_seconds: float | None = None) -> RoutingDecision:
+async def route(prompt: str, max_latency_seconds: float | None = None) -> RoutingDecision:
     config = load_routing_config()
-    tier, confidence = classify(prompt)
+    backend = config.get("classifier_backend", "llm")
+    if backend == "llm":
+        tier, confidence = await llm_classifier.classify(prompt)
+    else:
+        tier, confidence = tfidf_classifier.classify(prompt)
 
     escalated = False
     if confidence < config["min_confidence"] and tier < 3:

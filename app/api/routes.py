@@ -24,7 +24,7 @@ def _last_user_prompt(messages: list[ChatMessage]) -> str:
 async def create_completion(payload: CompletionRequest) -> CompletionResponse:
     prompt = _last_user_prompt(payload.messages)
 
-    decision = route(prompt, max_latency_seconds=payload.max_latency_seconds)
+    decision = await route(prompt, max_latency_seconds=payload.max_latency_seconds)
     response = await send_request(prompt, decision.model_config)
 
     request_id = log_request(

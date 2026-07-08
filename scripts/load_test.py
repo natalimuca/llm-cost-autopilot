@@ -1,5 +1,11 @@
-"""Send a batch of diverse prompts through the running API to generate a
-realistic cost-savings report and dashboard data for the portfolio writeup.
+"""Send a batch of diverse, real prompts through the running API to generate
+a realistic cost-savings report and dashboard data for the portfolio writeup.
+
+Draws from the same real Dolly-15k pool as the classifier's training data
+(scripts.fetch_real_dataset), but across *all* of Dolly's categories, not
+just the ones we trained on -- this deliberately includes prompt types the
+classifier has never seen (e.g. context-free trivia) so the load test
+reflects genuinely diverse real traffic, not just the easy cases.
 
 Usage: python -m scripts.load_test --n 500 --url http://localhost:8000
 """
@@ -10,7 +16,7 @@ import time
 
 import httpx
 
-from scripts.generate_dataset import generate
+from scripts.fetch_real_dataset import download_if_missing, load_rows, to_prompt
 
 
 async def _send_one(client: httpx.AsyncClient, url: str, prompt: str) -> dict:
@@ -18,7 +24,7 @@ async def _send_one(client: httpx.AsyncClient, url: str, prompt: str) -> dict:
     resp = await client.post(
         f"{url}/v1/completions",
         json={"messages": [{"role": "user", "content": prompt}]},
-        timeout=60.0,
+        timeout=120.0,
     )
     elapsed = time.perf_counter() - start
     resp.raise_for_status()
@@ -27,9 +33,15 @@ async def _send_one(client: httpx.AsyncClient, url: str, prompt: str) -> dict:
     return body
 
 
+def _load_real_prompts(n: int) -> list[str]:
+    download_if_missing()
+    rows = load_rows()
+    random.shuffle(rows)
+    return [to_prompt(row) for row in rows[:n]]
+
+
 async def main(n: int, url: str, concurrency: int) -> None:
-    pool = generate(n_per_tier=max(n // 3, 1))
-    prompts = [p for p, _ in random.sample(pool, min(n, len(pool)))]
+    prompts = _load_real_prompts(n)
 
     semaphore = asyncio.Semaphore(concurrency)
 
@@ -38,7 +50,7 @@ async def main(n: int, url: str, concurrency: int) -> None:
             try:
                 return await _send_one(client, url, prompt)
             except Exception as exc:  # noqa: BLE001 - load test, keep going
-                print(f"[fail] {exc}")
+                print(f"[fail] {type(exc).__name__}: {exc}")
                 return None
 
     async with httpx.AsyncClient() as client:

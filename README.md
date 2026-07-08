@@ -77,7 +77,7 @@ stay in scope. See `app/verifier/worker.py` for the reasoning.
 ```
 app/
   models/       Phase 1 — ModelConfig registry, provider adapters, send_request()
-  classifier/   Phase 2 — labeled dataset, TF-IDF + logistic regression training
+  classifier/   Phase 2 — llm_classifier.py (default) + classifier.py/train.py (TF-IDF fallback)
   router/       Phase 2 — tier -> model mapping (config/routing.yaml), latency-aware reassignment
   verifier/     Phase 3 — LLM-as-judge scoring, async worker, auto-escalation
   db/           Phase 4 — SQLite schema + logging/query helpers
@@ -86,49 +86,75 @@ app/
   logging_config.py  structured JSON request logs (alongside SQLite)
   main.py       Phase 5 — FastAPI app, lifespan (DB init + worker startup)
 scripts/
-  fetch_real_dataset.py     primary labeled dataset: real prompts from Dolly-15k (see below)
+  fetch_real_dataset.py     TF-IDF fallback's labeled dataset: real prompts from Dolly-15k (see below)
+  label_with_llm.py         GPT-4o labeling pass for categories fetch_real_dataset.py excludes
   generate_dataset.py       template-generated fallback/bootstrap dataset (Phase 2)
   test_providers.py         Phase 1 baseline: same prompts across every model
   retrain_from_feedback.py  Phase 3.4 flywheel: failures -> retrain
-  load_test.py              Phase 6 load test against a running API
+  load_test.py              Phase 6 load test against a running API (real Dolly prompts)
 config/routing.yaml         tier -> model map, editable via PUT /v1/routing-config
 tests/                       pytest unit tests (testpaths scoped via pytest.ini so
                               `pytest` never tries to collect scripts/*.py)
 ```
 
-## The classifier's training data — real, not synthetic
+## The classifier: two backends, one honest experiment
 
-`app/classifier/data/labeled_prompts.csv` is 900 real, human-written prompts
-sampled from [databricks-dolly-15k](https://huggingface.co/datasets/databricks/databricks-dolly-15k)
-(CC BY-SA 3.0), not templates. `scripts/fetch_real_dataset.py` maps Dolly's
-task categories onto our 3 tiers as a documented heuristic:
+`config/routing.yaml`'s `classifier_backend` picks which one routes traffic:
 
-| Tier | Dolly categories |
-|---|---|
-| 1 (simple) | closed_qa, information_extraction |
-| 2 (moderate) | classification, summarization |
-| 3 (complex) | creative_writing, brainstorming |
+- **`llm` (default, needs `OPENAI_API_KEY` billing)** — `app/classifier/llm_classifier.py`
+  asks gpt-4o-mini to judge each prompt's tier directly via a few-shot
+  prompt. Adds one small extra call per request; costs a small fraction of
+  a cent.
+- **`tfidf` (free, offline, no API key needed)** — `app/classifier/classifier.py`,
+  TF-IDF + logistic regression trained on `app/classifier/data/labeled_prompts.csv`.
+  Use this for CI, local dev without billing, or as a fallback.
 
-**First pass** (`open_qa`/`general_qa` also included in tier 1): 63.9%
-held-out accuracy — well below the spec's "~80% is fine for V1" bar, driven
-almost entirely by tier 1 (49% precision). Those two categories are
-context-free trivia questions that don't actually match tier 1's own
-definition ("basic Q&A **from provided context**"), and they range from
-genuinely trivial to genuinely nuanced with no signal in the category label
-to tell which is which.
+### Why both exist — the experiment that led here
 
-**After dropping them:** 84.4% held-out accuracy (180-example test set),
-tier 1 precision up to 77%. This is a fidelity fix — narrowing the data to
-match the tier definitions we'd already written — not a metric-chasing
-cherry-pick. The honest tradeoff that comes with it: the classifier now has
-*zero* training exposure to context-free general-knowledge questions (e.g.
-"What is EFTPOS?"), and correspondingly guesses at them poorly (in one spot
-check, that exact prompt landed on tier 3 with only 57% confidence). We
-traded coverage on a common real-world query type for precision on the
-categories we kept — worth knowing before you point real traffic at this.
+The training data started as 900 real, human-written prompts sampled from
+[databricks-dolly-15k](https://huggingface.co/datasets/databricks/databricks-dolly-15k)
+(CC BY-SA 3.0), not templates, with Dolly's task categories mapped onto our
+3 tiers as a heuristic (`scripts/fetch_real_dataset.py`).
 
-Run `python -m scripts.fetch_real_dataset --sample-check 15` to print
-random samples and spot-check the category->tier mapping yourself.
+| Step | What changed | TF-IDF held-out accuracy |
+|---|---|---|
+| 1 | `open_qa`/`general_qa` (context-free trivia) included in tier 1 | 63.9% |
+| 2 | Dropped those two categories — narrower but cleaner labels | **84.4%** |
+| 3 | Added them back with real per-example GPT-4o labels instead of a category guess | 64.6% |
+
+Step 2 looked like a win, but step 3 revealed why it wasn't a real fix:
+accuracy *dropped* back down even with objectively better labels, because
+"What is EFTPOS?" (tier 1) and "Why do people like dogs so much?" (tier 2/3)
+use similarly plain, short vocabulary — the complexity difference is
+*semantic*, not lexical, and no amount of TF-IDF feature engineering can see
+that distinction. That's a real ceiling of bag-of-words classification on
+this task, not a data quality problem.
+
+**That's the actual justification for the `llm` backend.** Once cloud
+billing was available, switching the classifier itself to gpt-4o-mini
+(which understands the prompt instead of pattern-matching its vocabulary)
+directly targeted the gap the experiment proved existed:
+
+| Metric | TF-IDF backend | LLM backend |
+|---|---|---|
+| Real load test (150 diverse prompts) cost savings | 28.8% | **68.9%** |
+| Routing distribution | 58% to gpt-4o | 54% local/free, 28% mid-tier, 18% gpt-4o |
+| Avg verifier quality score | 4.66/5 | 4.15/5 |
+| Escalation rate | 2.0% | 15.0% |
+
+The lower avg quality score and higher escalation rate under the `llm`
+backend aren't regressions — they're the system routing far more
+aggressively to a genuinely weaker free/cheap model (local Llama went from
+5% to 54% of traffic), which naturally gets more prompts wrong, and the
+verifier safety net catching and auto-correcting those in the background.
+That's the entire point of the escalation loop working as designed, not a
+side effect to explain away.
+
+Run `python -m scripts.fetch_real_dataset --sample-check 15` to spot-check
+the Dolly category->tier mapping, or `python -m scripts.label_with_llm --n 400`
+to re-run the GPT-4o labeling pass (note: subject to your account's
+tokens-per-minute rate limit -- ~285/400 succeeded at concurrency 10 on a
+low-tier account, the rest hit 429s and were skipped, not silently dropped).
 
 ## Setup
 
@@ -149,20 +175,23 @@ in `app/models/registry.py` for whatever you have.
 python -m scripts.test_providers
 ```
 
-### 2. Fetch the real dataset and train the classifier (Phase 2)
+### 2. Set up the classifier (Phase 2)
+
+The default `classifier_backend: llm` in `config/routing.yaml` needs no
+training step at all — it calls gpt-4o-mini directly. If you want the free
+offline `tfidf` fallback available too (e.g. for CI or no-billing dev):
 
 ```bash
 python -m scripts.fetch_real_dataset
 python -m app.classifier.train
 ```
 
-This downloads real, human-written prompts (see "The classifier's training
-data" above) and trains on them — no API keys needed. If you'd rather
-bootstrap quickly with the older template-generated set instead (faster,
-but inflated accuracy that doesn't reflect real traffic), use
-`python -m scripts.generate_dataset` instead. Either way, the Phase 3
-feedback loop appends real verifier-caught routing failures to whichever
-dataset you're using.
+This downloads real, human-written prompts (see "The classifier" above) and
+trains on them. If you'd rather bootstrap quickly with the older
+template-generated set instead (faster, but inflated accuracy that doesn't
+reflect real traffic), use `python -m scripts.generate_dataset` instead.
+Either way, the Phase 3 feedback loop appends real verifier-caught routing
+failures to whichever dataset you're using.
 
 ### 3. Run the API + dashboard
 

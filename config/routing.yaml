@@ -1,3 +1,9 @@
+# Which classifier decides the tier: "llm" (gpt-4o-mini judges each prompt,
+# needs OPENAI_API_KEY billing) or "tfidf" (free, local, ~63-65% accuracy on
+# real prompts -- see app/classifier/train.py). Falls back automatically
+# only if you set it to "tfidf" yourself; no auto-detection of missing keys.
+classifier_backend: llm
+
 # Tier -> model registry key (see app/models/registry.py MODEL_REGISTRY).
 # Editable at runtime via PUT /v1/routing-config — no redeploy needed.
 tier_to_model:
